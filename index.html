@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Dés de bataille</title>
+  <meta name="description" content="Lanceur de dés pour batailles façon Risk, ambiance Premier Empire.">
+  <meta name="theme-color" content="#1b1309">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dés de bataille">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main class="board" id="board">
+
+    <!-- Attaquant : moitié du haut, retournée pour le joueur d'en face -->
+    <section class="half attack" data-side="attack" aria-label="Attaquant">
+      <div class="soldier">
+        <figure class="card">
+          <img class="art passive" alt="">
+          <img class="art aggressive" alt="">
+          <span class="badge" aria-label="Pertes"></span>
+          <figcaption class="name"></figcaption>
+        </figure>
+      </div>
+      <header>
+        <h2>Attaquant</h2>
+        <p class="status">Choisissez vos dés</p>
+      </header>
+      <div class="count" role="radiogroup" aria-label="Nombre de dés">
+        <button type="button" role="radio" data-n="1">1</button>
+        <button type="button" role="radio" data-n="2">2</button>
+        <button type="button" role="radio" data-n="3">3</button>
+      </div>
+      <div class="tray"></div>
+      <button type="button" class="ready">Prêt</button>
+    </section>
+
+    <div class="front" aria-live="polite">
+      <span class="msg flip"></span>
+      <span class="msg"></span>
+    </div>
+
+    <!-- Défenseur : moitié du bas -->
+    <section class="half defense" data-side="defense" aria-label="Défenseur">
+      <div class="soldier">
+        <figure class="card">
+          <img class="art passive" alt="">
+          <img class="art aggressive" alt="">
+          <span class="badge" aria-label="Pertes"></span>
+          <figcaption class="name"></figcaption>
+        </figure>
+      </div>
+      <header>
+        <h2>Défenseur</h2>
+        <p class="status">Choisissez vos dés</p>
+      </header>
+      <div class="count" role="radiogroup" aria-label="Nombre de dés">
+        <button type="button" role="radio" data-n="1">1</button>
+        <button type="button" role="radio" data-n="2">2</button>
+      </div>
+      <div class="tray"></div>
+      <button type="button" class="ready">Prêt</button>
+    </section>
+
+  </main>
+</body>
+</html>

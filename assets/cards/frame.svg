@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" preserveAspectRatio="none">
+  <!-- Cadre doré de la carte : double filet et volutes aux quatre coins -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3dc95"/>
+      <stop offset="0.5" stop-color="#c9a24a"/>
+      <stop offset="1" stop-color="#8a6420"/>
+    </linearGradient>
+    <g id="corner" fill="none" stroke="url(#g)" stroke-width="2.2" stroke-linecap="round">
+      <path d="M8 34 V14 Q8 8 14 8 H34"/>
+      <path d="M14 40 V20 Q14 14 20 14 H40"/>
+      <path d="M14 20 Q22 22 24 30 Q26 22 34 22 Q26 20 24 14"/>
+      <circle cx="24" cy="24" r="2.6" fill="#c9a24a" stroke="none"/>
+    </g>
+  </defs>
+  <rect x="9" y="9" width="182" height="282" rx="6" fill="none" stroke="url(#g)" stroke-width="2.4"/>
+  <rect x="14.5" y="14.5" width="171" height="271" rx="3" fill="none" stroke="#c9a24a" stroke-width="1" opacity="0.8"/>
+  <use href="#corner"/>
+  <use href="#corner" transform="translate(200 0) scale(-1 1)"/>
+  <use href="#corner" transform="translate(0 300) scale(1 -1)"/>
+  <use href="#corner" transform="translate(200 300) scale(-1 -1)"/>
+</svg>

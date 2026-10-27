@@ -1,0 +1,419 @@
+:root {
+  --garance: #a3201b;
+  --garance-edge: #6e110d;
+  --france: #1f4597;
+  --france-edge: #102a63;
+  --brass: #c9a24a;
+  --brass-light: #ecd28b;
+  --brass-dark: #7a5a1c;
+  --ivory: #f3e6c8;
+  --ink: #1b1309;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --die: clamp(40px, 12vw, 60px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--serif);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.board {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+}
+
+/* ---------- Moitiés ---------- */
+
+.half {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 47%) 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 8px 12px;
+  padding: 16px 16px max(18px, env(safe-area-inset-bottom));
+}
+
+.half::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgb(201 162 74 / 0.35);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+.attack {
+  transform: rotate(180deg);
+  padding-bottom: max(18px, env(safe-area-inset-top));
+  background:
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.025) 0 2px, transparent 2px 9px),
+    radial-gradient(120% 90% at 30% 35%, #64170f 0%, #2c0705 75%);
+}
+
+.defense {
+  background:
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.025) 0 2px, transparent 2px 9px),
+    radial-gradient(120% 90% at 30% 35%, #183470 0%, #071026 75%);
+}
+
+.half > * { position: relative; }
+
+.soldier {
+  grid-row: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  container-type: size;
+  perspective: 900px;
+}
+
+/* ---------- Carte du personnage ---------- */
+
+.card {
+  position: relative;
+  margin: 0;
+  width: min(100cqw, 100cqh * 2 / 3);
+  aspect-ratio: 2 / 3;
+  padding: 4.5%;
+  border-radius: 7% / 4.7%;
+  background: #120d08;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 0.6), inset 0 0 0 1px rgb(255 255 255 / 0.08);
+}
+
+.card.flip { animation: flip 0.6s ease-in-out; }
+
+@keyframes flip {
+  50% { transform: rotateY(90deg) scale(0.92); }
+}
+
+.card.charge { animation: charge 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+@keyframes charge {
+  30% { transform: scale(1.07) rotate(-2deg); }
+  60% { transform: scale(1.03) rotate(1.5deg); }
+}
+
+.art {
+  position: absolute;
+  inset: 4.5%;
+  width: 91%;
+  height: 91%;
+  object-fit: cover;
+  border-radius: 4% / 2.7%;
+  transition: opacity 0.25s;
+}
+
+.art.aggressive { opacity: 0; }
+.card.is-aggressive .art.aggressive { opacity: 1; }
+.card.is-aggressive .art.passive { opacity: 0; }
+
+/* cadre doré et vignettage par-dessus l'illustration */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 4.5%;
+  border-radius: 4% / 2.7%;
+  background: url("assets/cards/frame.svg") center / 100% 100% no-repeat;
+  box-shadow: inset 0 0 22px rgb(60 30 5 / 0.55);
+  pointer-events: none;
+}
+
+.badge {
+  position: absolute;
+  z-index: 1;
+  top: 7.5%;
+  left: 9%;
+  width: 16%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #d8443a, #8e1b16 70%);
+  box-shadow: 0 0 0 1.5px #f3e6c8, 0 0 0 2.5px #8e1b16, 0 2px 4px rgb(0 0 0 / 0.5);
+  color: #fff;
+  font: 600 clamp(11px, 3.8cqw, 18px) var(--serif);
+}
+
+.badge.stamp { animation: stamp 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) both; }
+
+.name {
+  position: absolute;
+  z-index: 1;
+  left: 12%;
+  right: 12%;
+  bottom: 7.5%;
+  text-align: center;
+  font-size: clamp(9px, 3.6cqw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3b2410;
+  text-shadow: 0 0 4px #efe2c0, 0 0 2px #efe2c0;
+}
+
+header h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+}
+
+.status {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-style: italic;
+  opacity: 0.8;
+  min-height: 1.3em;
+}
+
+/* ---------- Choix du nombre de dés ---------- */
+
+.count { display: flex; gap: 8px; }
+
+.count button {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1.5px solid var(--brass);
+  background: rgb(0 0 0 / 0.25);
+  color: var(--ivory);
+  font: 600 20px var(--serif);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+
+.count button[aria-checked="true"] {
+  background: linear-gradient(var(--brass-light), var(--brass));
+  color: var(--ink);
+}
+
+.count button:active { transform: scale(0.94); }
+.count button:disabled { opacity: 0.45; cursor: default; }
+
+/* ---------- Bouton Prêt ---------- */
+
+.ready {
+  height: 52px;
+  border-radius: 10px;
+  border: 1.5px solid var(--brass-light);
+  background: linear-gradient(var(--brass-light), var(--brass) 60%, var(--brass-dark));
+  color: var(--ink);
+  font: 600 16px var(--serif);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--brass-dark), 0 6px 12px rgb(0 0 0 / 0.4);
+  transition: transform 0.1s, box-shadow 0.1s, opacity 0.2s;
+}
+
+.ready:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--brass-dark); }
+
+.ready.is-ready {
+  background: rgb(0 0 0 / 0.3);
+  color: var(--brass-light);
+  box-shadow: none;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.ready:disabled { opacity: 0.4; cursor: default; }
+
+/* ---------- Plateau de dés ---------- */
+
+.tray {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: calc(var(--die) + 34px);
+  padding-bottom: 14px;
+  border-radius: 12px;
+  border: 1px solid rgb(201 162 74 / 0.3);
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.15), rgb(0 0 0 / 0.4));
+  perspective: 700px;
+}
+
+.slot {
+  position: relative;
+  width: var(--die);
+  height: var(--die);
+  border-radius: 16%;
+  transition: box-shadow 0.25s, filter 0.3s, opacity 0.3s;
+}
+
+/* ombre portée sous le dé */
+.slot::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -9px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55);
+  filter: blur(3px);
+  z-index: -1;
+}
+
+.slot .num {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -27px;
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--brass-light);
+}
+
+.toss, .cube { width: 100%; height: 100%; transform-style: preserve-3d; }
+.cube { position: relative; }
+
+.face, .core {
+  position: absolute;
+  inset: 0;
+  border-radius: 16%;
+  background: var(--die-color);
+}
+
+.core { inset: 3%; border-radius: 4%; background: var(--die-edge); }
+
+.face {
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  padding: 13%;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18), inset 0 -5px 9px rgb(0 0 0 / 0.35), inset 0 4px 6px rgb(255 255 255 / 0.12);
+  backface-visibility: hidden;
+}
+
+.face i {
+  width: 66%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  place-self: center;
+  background: var(--ivory);
+  box-shadow: inset 0 2px 2px rgb(0 0 0 / 0.5);
+  visibility: hidden;
+}
+
+.face i.p { visibility: visible; }
+
+.attack .slot { --die-color: var(--garance); --die-edge: var(--garance-edge); }
+.defense .slot { --die-color: var(--france); --die-edge: var(--france-edge); }
+
+.f1 { transform: translateZ(calc(var(--die) / 2)); }
+.f6 { transform: rotateY(180deg) translateZ(calc(var(--die) / 2)); }
+.f2 { transform: rotateY(90deg) translateZ(calc(var(--die) / 2)); }
+.f5 { transform: rotateY(-90deg) translateZ(calc(var(--die) / 2)); }
+.f3 { transform: rotateX(90deg) translateZ(calc(var(--die) / 2)); }
+.f4 { transform: rotateX(-90deg) translateZ(calc(var(--die) / 2)); }
+.c2 { transform: rotateY(90deg); }
+.c3 { transform: rotateX(90deg); }
+
+/* Lancer : le dé part de la main du joueur (bord de son écran), monte, retombe et rebondit */
+.toss.go { animation: toss var(--roll, 1600ms) cubic-bezier(0.3, 0.6, 0.4, 1) both; }
+
+@keyframes toss {
+  0%   { transform: translate3d(var(--dx), 190px, 0) scale(0.7); }
+  30%  { transform: translate3d(calc(var(--dx) * 0.5), -34px, 60px) scale(1.35); }
+  55%  { transform: translate3d(calc(var(--dx) * 0.15), 0, 0) scale(1); }
+  68%  { transform: translate3d(calc(var(--dx) * 0.05), -12px, 15px) scale(1.08); }
+  80%  { transform: translate3d(0, 0, 0) scale(1); }
+  88%  { transform: translate3d(0, -3px, 0) scale(1.02); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* ---------- Duel ---------- */
+
+.slot.fight { animation: fight 0.35s ease-out; }
+
+@keyframes fight {
+  50% { transform: scale(1.18); }
+}
+
+.slot.win {
+  box-shadow: 0 0 0 3px var(--brass-light), 0 0 22px 6px rgb(236 210 139 / 0.65);
+}
+
+.slot.lose {
+  filter: grayscale(0.75) brightness(0.5);
+  animation: hit 0.4s ease-out;
+}
+
+/* fissure sur le dé vaincu */
+.slot.lose::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgb(20 10 5 / 0.9);
+  clip-path: polygon(18% 0, 26% 0, 44% 34%, 36% 46%, 62% 70%, 56% 78%, 80% 100%, 72% 100%, 48% 80%, 54% 72%, 28% 48%, 36% 36%);
+}
+
+@keyframes hit {
+  20% { transform: translateX(-5px) rotate(-4deg); }
+  45% { transform: translateX(4px) rotate(3deg); }
+  70% { transform: translateX(-2px); }
+}
+
+.slot.idle { opacity: 0.4; }
+
+@keyframes stamp {
+  0% { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- Bandeau central ---------- */
+
+/* Carte du monde ancienne, bordée de filets dorés */
+.front {
+  position: relative;
+  z-index: 2;
+  height: 96px;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  padding: 6px 0;
+  background: url("assets/map.webp") center 42% / cover no-repeat, #d9c49a;
+  border-block: 3px solid var(--brass);
+  box-shadow:
+    0 0 0 1px var(--brass-dark),
+    0 0 18px rgb(0 0 0 / 0.7),
+    inset 0 0 18px rgb(70 40 10 / 0.55);
+  color: var(--ink);
+}
+
+.front .msg {
+  padding: 2px 12px;
+  border-radius: 999px;
+  border: 1px solid rgb(122 90 28 / 0.7);
+  background: rgb(243 230 200 / 0.88);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+}
+
+.front .flip { transform: rotate(180deg); }
+.front .msg:empty { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slot.fight, .slot.lose, .badge.stamp, .card.flip, .card.charge { animation-duration: 0.01s; }
+}
